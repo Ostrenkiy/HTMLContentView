@@ -27,6 +27,7 @@ class HTMLContentView: UIView {
         
     override init(frame: CGRect) {
         super.init(frame: frame)
+        didLoad()
     }
     
     convenience init() {
@@ -35,10 +36,14 @@ class HTMLContentView: UIView {
         
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        didLoad()
     }
 
     private func didLoad() {
         textView.scrollEnabled = false
+        textView.editable = false
+        textView.selectable = false
+        
         webView.scrollView.scrollEnabled = false
         addSubview(textView)
         addSubview(webView)
@@ -51,8 +56,10 @@ class HTMLContentView: UIView {
     func loadHTMLText(htmlString: String, styles: TextStyles? = nil) {
         if TagDetectionUtil.isWebViewSupportNeeded(htmlString) {
             loadWebView(htmlString)
+            webView.hidden = false
         } else {
             loadTextView(htmlString)
+            textView.hidden = false
         }
     }
     
