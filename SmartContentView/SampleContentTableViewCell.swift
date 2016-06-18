@@ -11,13 +11,22 @@ import UIKit
 class SampleContentTableViewCell: UITableViewCell {
 
     @IBOutlet weak var htmlContentView: HTMLContentView!
-    
+    var heightUpdateBlock : (Void->Void)?
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         htmlContentView.interactionDelegate = self
     }
 
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        htmlContentView.interactionDelegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
@@ -27,8 +36,9 @@ class SampleContentTableViewCell: UITableViewCell {
 }
 
 extension SampleContentTableViewCell: HTMLContentViewInteractionDelegate {
-    func didSelectTextView() {
-        setSelected(!self.selected, animated: true)
-        //TODO: Call some other delegate to notify controller about selection
+    func shouldUpdateSize() {
+//        setNeedsLayout()
+//        layoutIfNeeded()
+        heightUpdateBlock?()
     }
 }

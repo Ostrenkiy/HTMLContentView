@@ -29,6 +29,16 @@ class HTMLContentView: UIView {
     
     weak var interactionDelegate: HTMLContentViewInteractionDelegate?
     
+    var htmlText : String? = nil {
+        didSet(oldValue) {
+            if oldValue != htmlText {
+                if let t = htmlText {
+                    loadHTMLText(t)
+                }
+            }
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         didLoad()
@@ -84,7 +94,7 @@ class HTMLContentView: UIView {
         webView.hidden = true
     }
     
-    func loadHTMLText(htmlString: String, styles: TextStyle? = nil) {
+    private func loadHTMLText(htmlString: String, styles: TextStyle? = nil) {
 //        if TagDetectionUtil.isWebViewSupportNeeded(htmlString) {
             loadWebView(htmlString)
             webView.hidden = false
@@ -131,8 +141,13 @@ extension HTMLContentView : UITextViewDelegate {
 extension HTMLContentView : WKScriptMessageHandler {
     func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
         if let height = message.body["height"] as? CGFloat {
-            webViewHeight.constant = height
-            interactionDelegate?.shouldUpdateSize()
+            dispatch_async(dispatch_get_main_queue(), {
+                [weak self] in
+                self?.webViewHeight.constant = height
+                self?.setNeedsLayout()
+                self?.layoutIfNeeded()
+                self?.interactionDelegate?.shouldUpdateSize()
+            })
         }
         
     }

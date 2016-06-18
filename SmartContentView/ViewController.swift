@@ -14,8 +14,13 @@ class ViewController: UIViewController {
     
     let strings : [String] = [
         "I am a small simple string",
-        "Here is a string with a simple tag <b>bold</b>",
-        "Here is a string with a simple tag <b>bold</b>",
+        "image: <img src=\"http://placehold.it/350x150\">",
+        "I am a small simple string 2",
+        "I am a small simple string 3",
+        "I am a small simple string 4",
+        "I am a small simple string 5",
+        "I am a small simple string 6",
+        "I am a small simple string 7",
         "Here is a string with a simple tag <b>bold</b>",
         "Link to something <a href=\"http://google.com\">interesting</a>",
         "This link may be automatically detected http://google.com",
@@ -23,6 +28,8 @@ class ViewController: UIViewController {
         "Long long long long long long long long long long long long long long long long long long long long long  long long long long long line",
         "Big LaTeX formula: $\\lim_{x\\to 0}{\\frac{e^x-1}{2x}}\\overset{\\left[\\frac{0}{0}\\right]}{\\underset{\\mathrm{H}}{=}}\\lim_{x\\to 0}{\\frac{e^x}{2}}={\\frac{1}{2}}$"
     ]
+    
+    var cellForRow = [Int: UITableViewCell]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,9 +64,27 @@ extension ViewController : UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("SampleContentTableViewCell") as! SampleContentTableViewCell
+        if let cell = cellForRow[indexPath.row] {
+            return cell
+        } else {
+            let cell = NSBundle.mainBundle().loadNibNamed("SampleContentTableViewCell", owner: self, options: nil)[0] as! SampleContentTableViewCell
+            //SampleContentTableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "SampleContentTableViewCell")
         
-        cell.htmlContentView.loadHTMLText(strings[indexPath.row])
-        return cell
+            cell.heightUpdateBlock = {
+                [weak self] in
+                dispatch_async(dispatch_get_main_queue(), {
+                    print("height update block for cell \(indexPath.row)")
+                    self?.tableView.beginUpdates()
+                    self?.tableView.endUpdates()
+//                self?.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+                })
+
+            }
+            
+            cell.htmlContentView.htmlText = strings[indexPath.row]
+            cellForRow[indexPath.row] = cell
+            return cell
+        }
+        
     }
 }
