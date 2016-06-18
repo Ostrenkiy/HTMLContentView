@@ -68,6 +68,8 @@ class HTMLContentView: UIView {
     private func loadTextView(htmlString: String) {
         if let data = htmlString.dataUsingEncoding(NSUnicodeStringEncoding, allowLossyConversion: false) {
             do {
+                //This line causes runtime warning [CATransaction synchronize] called within transaction
+                //Possibly should do this in another thread or initialize some HTML parsing in AppDelegate
                 let attributedString = try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
                 textView.attributedText = attributedString
             }
