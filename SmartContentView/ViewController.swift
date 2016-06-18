@@ -14,7 +14,9 @@ class ViewController: UIViewController {
     
     let strings : [String] = [
         "I am a small simple string",
-        "Here is a string with a simple tag <b>bold</b>"
+        "Here is a string with a simple tag <b>bold</b>",
+        "Link to something <a href=\"http://google.com\">interesting</a>",
+        "This link may be automatically detected http://google.com"
     ]
     
     override func viewDidLoad() {

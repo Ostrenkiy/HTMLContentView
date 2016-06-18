@@ -25,6 +25,8 @@ class HTMLContentView: UIView {
     var textView: UITextView = UITextView()
     var webView: UIWebView = UIWebView()
         
+    weak var interactionDelegate: HTMLContentViewInteractionDelegate?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         didLoad()
@@ -41,8 +43,8 @@ class HTMLContentView: UIView {
 
     private func didLoad() {
         textView.scrollEnabled = false
-        textView.editable = false
-        textView.selectable = false
+        textView.delegate = self
+        textView.userInteractionEnabled = false
         
         webView.scrollView.scrollEnabled = false
         addSubview(textView)
@@ -64,7 +66,7 @@ class HTMLContentView: UIView {
     }
     
     private func loadTextView(htmlString: String) {
-        if let data = htmlString.dataUsingEncoding(NSUnicodeStringEncoding) {
+        if let data = htmlString.dataUsingEncoding(NSUnicodeStringEncoding, allowLossyConversion: false) {
             do {
                 let attributedString = try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
                 textView.attributedText = attributedString
@@ -78,6 +80,9 @@ class HTMLContentView: UIView {
     private func loadWebView(htmlString: String) {
         webView.loadHTMLString(htmlString, baseURL: nil)
     }
+}
+
+extension HTMLContentView : UITextViewDelegate {
 }
 
 struct TextStyles {

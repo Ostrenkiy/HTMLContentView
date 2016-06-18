@@ -19,6 +19,7 @@
 		080674931D14AAC200BB095C /* HTMLContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080674921D14AAC200BB095C /* HTMLContentView.swift */; };
 		080674971D14B7A100BB095C /* SampleContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080674951D14B7A100BB095C /* SampleContentTableViewCell.swift */; };
 		080674981D14B7A100BB095C /* SampleContentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 080674961D14B7A100BB095C /* SampleContentTableViewCell.xib */; };
+		0806749B1D14C2B500BB095C /* HTMLContentViewInteractionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0806749A1D14C2B500BB095C /* HTMLContentViewInteractionDelegate.swift */; };
 		3A01AB67C860C529AA631C5E /* Pods_SmartContentViewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74B6E8C3854A46EBD4929790 /* Pods_SmartContentViewTests.framework */; };
 		442E20FDD13EDC2E4CDAC54D /* Pods_SmartContentViewUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87D5B7C2D0FF6C7DB874CA1D /* Pods_SmartContentViewUITests.framework */; };
 		F420C0B6ECF65CA9E003D511 /* Pods_SmartContentView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5835C98315819CCBF8F1CAB0 /* Pods_SmartContentView.framework */; };
@@ -60,6 +61,7 @@
 		080674921D14AAC200BB095C /* HTMLContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTMLContentView.swift; sourceTree = "<group>"; };
 		080674951D14B7A100BB095C /* SampleContentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleContentTableViewCell.swift; sourceTree = "<group>"; };
 		080674961D14B7A100BB095C /* SampleContentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleContentTableViewCell.xib; sourceTree = "<group>"; };
+		0806749A1D14C2B500BB095C /* HTMLContentViewInteractionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTMLContentViewInteractionDelegate.swift; sourceTree = "<group>"; };
 		28A3AA653E8316DE15905A6C /* Pods-SmartContentViewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmartContentViewTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SmartContentViewTests/Pods-SmartContentViewTests.release.xcconfig"; sourceTree = "<group>"; };
 		5835C98315819CCBF8F1CAB0 /* Pods_SmartContentView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SmartContentView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71A24BD11418DBB545B5FA2B /* Pods-SmartContentViewUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SmartContentViewUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SmartContentViewUITests/Pods-SmartContentViewUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				080674921D14AAC200BB095C /* HTMLContentView.swift */,
+				0806749A1D14C2B500BB095C /* HTMLContentViewInteractionDelegate.swift */,
 			);
 			name = HTMLContentView;
 			sourceTree = "<group>";
@@ -472,6 +475,7 @@
 				0806748F1D14A7A900BB095C /* HTMLParsingUtil.swift in Sources */,
 				080674621D149B1F00BB095C /* ViewController.swift in Sources */,
 				080674901D14A7A900BB095C /* TagDetectionUtil.swift in Sources */,
+				0806749B1D14C2B500BB095C /* HTMLContentViewInteractionDelegate.swift in Sources */,
 				080674601D149B1F00BB095C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
