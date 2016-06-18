@@ -67,17 +67,22 @@ class HTMLContentView: UIView {
     
     private func loadTextView(htmlString: String) {
         if let data = htmlString.dataUsingEncoding(NSUnicodeStringEncoding, allowLossyConversion: false) {
-            do {
-                //This line causes runtime warning [CATransaction synchronize] called within transaction
-                //Possibly should do this in another thread or initialize some HTML parsing in AppDelegate
-                let attributedString = try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
-                textView.attributedText = attributedString
-            }
-            catch {
-                //TODO: throw an exception here, or pass an error
-            }
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+                [weak self] in
+                do {
+                    let attributedString = try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType], documentAttributes: nil)
+                        
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self?.textView.attributedText = attributedString
+                    })
+                }
+                catch {
+                    //TODO: throw an exception here, or pass an error
+                }
+            })
         }
     }
+    
     
     private func loadWebView(htmlString: String) {
         webView.loadHTMLString(htmlString, baseURL: nil)
