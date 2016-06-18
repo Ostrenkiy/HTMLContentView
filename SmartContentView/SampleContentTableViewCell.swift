@@ -37,6 +37,10 @@ class SampleContentTableViewCell: UITableViewCell {
 
 extension SampleContentTableViewCell: HTMLContentViewInteractionDelegate {
     func shouldUpdateSize() {
+        setNeedsUpdateConstraints()
+        updateConstraintsIfNeeded()
+        setNeedsLayout()
+        layoutIfNeeded()
 //        setNeedsLayout()
 //        layoutIfNeeded()
         heightUpdateBlock?()

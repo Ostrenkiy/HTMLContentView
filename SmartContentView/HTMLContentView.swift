@@ -75,9 +75,15 @@ class HTMLContentView: UIView {
         contentController.addUserScript( WKUserScript(
             source: "window.onload=function () { window.webkit.messageHandlers.sizeNotification.postMessage({width: document.width, height: document.height});};",
             injectionTime: WKUserScriptInjectionTime.AtDocumentStart,
-            forMainFrameOnly: true
+            forMainFrameOnly: false
         ))
+//        contentController.addUserScript(WKUserScript(
+//            source: "MathJax.Hub.Queue(function () { window.webkit.messageHandlers.mathJaxFinishedNotification.postMessage({width: document.width, height: document.height});};", 
+//            injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, 
+//            forMainFrameOnly: true
+//            ))
         contentController.addScriptMessageHandler(self, name: "sizeNotification")
+//        contentController.addScriptMessageHandler(self, name: "mathJaxFinishedNotification")
 
         self.webView = WKWebView(frame: CGRectZero, configuration: theConfiguration)
 
@@ -88,6 +94,7 @@ class HTMLContentView: UIView {
         webView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         webView.navigationDelegate = self
         webViewHeight = webView.constrainHeight("0")
+        webViewHeight.active = false
         
         addSubview(webView)
         webView.alignToView(self)
@@ -95,24 +102,27 @@ class HTMLContentView: UIView {
     }
     
     private func loadHTMLText(htmlString: String, styles: TextStyle? = nil) {
-//        if TagDetectionUtil.isWebViewSupportNeeded(htmlString) {
+        if TagDetectionUtil.isWebViewSupportNeeded(htmlString) {
+            webViewHeight.active = true
             loadWebView(htmlString)
             webView.hidden = false
-//        } else {
-//            loadTextView(htmlString)
-//            textView.hidden = false
-//        }
+        } else {
+            loadTextView(htmlString)
+            textView.hidden = false
+        }
     }
     
     private func loadTextView(htmlString: String) {
-        if let data = htmlString.dataUsingEncoding(NSUnicodeStringEncoding, allowLossyConversion: false) {
+        let wrapped = HTMLStringWrapperUtil.wrap(htmlString)
+        if let data = wrapped.dataUsingEncoding(NSUnicodeStringEncoding, allowLossyConversion: false) {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
                 [weak self] in
                 do {
                     let attributedString = try NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType], documentAttributes: nil)
-                        
+                    
                     dispatch_async(dispatch_get_main_queue(), {
                         self?.textView.attributedText = attributedString
+//                        self?.interactionDelegate?.shouldUpdateSize()
                     })
                 }
                 catch {
@@ -140,10 +150,13 @@ extension HTMLContentView : UITextViewDelegate {
 
 extension HTMLContentView : WKScriptMessageHandler {
     func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+//        print(message.name)
         if let height = message.body["height"] as? CGFloat {
             dispatch_async(dispatch_get_main_queue(), {
                 [weak self] in
                 self?.webViewHeight.constant = height
+                self?.setNeedsUpdateConstraints()
+                self?.updateConstraintsIfNeeded()
                 self?.setNeedsLayout()
                 self?.layoutIfNeeded()
                 self?.interactionDelegate?.shouldUpdateSize()
