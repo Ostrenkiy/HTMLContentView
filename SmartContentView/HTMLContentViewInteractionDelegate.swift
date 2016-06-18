@@ -9,5 +9,5 @@
 import Foundation
 
 protocol HTMLContentViewInteractionDelegate : class {
-    func didSelectTextView() 
+    func shouldUpdateSize() 
 }

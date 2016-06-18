@@ -8,6 +8,7 @@
 
 import UIKit
 import FLKAutoLayout
+import WebKit
 
 /*
  A UIView subclass, which is responsible for intelligent displaying of HTML content
@@ -23,8 +24,9 @@ class HTMLContentView: UIView {
     */
     
     var textView: UITextView = UITextView()
-    var webView: UIWebView = UIWebView()
-        
+    var webView: WKWebView = WKWebView()
+    var webViewHeight : NSLayoutConstraint = NSLayoutConstraint()
+    
     weak var interactionDelegate: HTMLContentViewInteractionDelegate?
     
     override init(frame: CGRect) {
@@ -42,27 +44,54 @@ class HTMLContentView: UIView {
     }
 
     private func didLoad() {
+        setUpWebView()
+        setUpTextView()
+    }
+    
+    private func setUpTextView() {
         textView.scrollEnabled = false
         textView.delegate = self
         textView.userInteractionEnabled = false
         
-        webView.scrollView.scrollEnabled = false
         addSubview(textView)
-        addSubview(webView)
         textView.alignToView(self)
-        webView.alignToView(self)
         textView.hidden = true
+    }
+    
+    private func setUpWebView() {
+    
+        let theConfiguration = WKWebViewConfiguration()
+        let contentController = theConfiguration.userContentController
+        contentController.addUserScript( WKUserScript(
+            source: "window.onload=function () { window.webkit.messageHandlers.sizeNotification.postMessage({width: document.width, height: document.height});};",
+            injectionTime: WKUserScriptInjectionTime.AtDocumentStart,
+            forMainFrameOnly: true
+        ))
+        contentController.addScriptMessageHandler(self, name: "sizeNotification")
+
+        self.webView = WKWebView(frame: CGRectZero, configuration: theConfiguration)
+
+        webView.scrollView.scrollEnabled = false
+        webView.allowsLinkPreview = true
+        webView.backgroundColor = UIColor.clearColor()
+        webView.scrollView.backgroundColor = UIColor.clearColor()
+        webView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        webView.navigationDelegate = self
+        webViewHeight = webView.constrainHeight("0")
+        
+        addSubview(webView)
+        webView.alignToView(self)
         webView.hidden = true
     }
     
-    func loadHTMLText(htmlString: String, styles: TextStyles? = nil) {
-        if TagDetectionUtil.isWebViewSupportNeeded(htmlString) {
+    func loadHTMLText(htmlString: String, styles: TextStyle? = nil) {
+//        if TagDetectionUtil.isWebViewSupportNeeded(htmlString) {
             loadWebView(htmlString)
             webView.hidden = false
-        } else {
-            loadTextView(htmlString)
-            textView.hidden = false
-        }
+//        } else {
+//            loadTextView(htmlString)
+//            textView.hidden = false
+//        }
     }
     
     private func loadTextView(htmlString: String) {
@@ -85,13 +114,30 @@ class HTMLContentView: UIView {
     
     
     private func loadWebView(htmlString: String) {
-        webView.loadHTMLString(htmlString, baseURL: nil)
+        let wrapped = HTMLStringWrapperUtil.wrap(htmlString)
+        webView.loadHTMLString(wrapped, baseURL: NSURL(fileURLWithPath: NSBundle.mainBundle().bundlePath))
+    }
+}
+
+extension HTMLContentView : WKNavigationDelegate {
+    func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
+        
     }
 }
 
 extension HTMLContentView : UITextViewDelegate {
 }
 
-struct TextStyles {
+extension HTMLContentView : WKScriptMessageHandler {
+    func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+        if let height = message.body["height"] as? CGFloat {
+            webViewHeight.constant = height
+            interactionDelegate?.shouldUpdateSize()
+        }
+        
+    }
+}
+
+struct TextStyle {
     
 }

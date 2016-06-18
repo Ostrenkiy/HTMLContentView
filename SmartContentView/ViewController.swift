@@ -15,8 +15,13 @@ class ViewController: UIViewController {
     let strings : [String] = [
         "I am a small simple string",
         "Here is a string with a simple tag <b>bold</b>",
+        "Here is a string with a simple tag <b>bold</b>",
+        "Here is a string with a simple tag <b>bold</b>",
         "Link to something <a href=\"http://google.com\">interesting</a>",
-        "This link may be automatically detected http://google.com"
+        "This link may be automatically detected http://google.com",
+        "Simple LaTeX here: $x*x=x^2$",
+        "Long long long long long long long long long long long long long long long long long long long long long  long long long long long line",
+        "Big LaTeX formula: $\\lim_{x\\to 0}{\\frac{e^x-1}{2x}}\\overset{\\left[\\frac{0}{0}\\right]}{\\underset{\\mathrm{H}}{=}}\\lim_{x\\to 0}{\\frac{e^x}{2}}={\\frac{1}{2}}$"
     ]
     
     override func viewDidLoad() {
