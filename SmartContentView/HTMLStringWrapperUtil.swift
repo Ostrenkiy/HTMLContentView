@@ -10,7 +10,7 @@ import Foundation
 
 class HTMLStringWrapperUtil {
     static func wrap(htmlString: String, style: TextStyle? = nil) -> String {
-        let scriptsString = "\(Scripts.metaViewport)\(Scripts.localTexScript)\(Scripts.mathJaxFinishedScript)"
+        let scriptsString = "\(Scripts.metaViewport)\(Scripts.localTexScript)"
         var html = HTMLBuilder.sharedBuilder.buildHTMLStringWith(head: scriptsString, body: htmlString, addStyle: true)
         html = html.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         return html

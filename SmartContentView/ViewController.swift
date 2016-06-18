@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     
     let strings : [String] = [
         "I am a small simple string",
-        "image: <img src=\"http://placehold.it/350x150\">",
+        "image: <img src=\"https://pp.vk.me/c628325/v628325621/42534/zJ5CCe3Uvx0.jpg\">",
         "I am a small simple string 2",
         "I am a small simple string 3",
         "I am a small simple string 4",
@@ -49,6 +49,12 @@ class ViewController: UIViewController {
     }
 
 
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
 }
 
 extension ViewController : UITableViewDelegate {
